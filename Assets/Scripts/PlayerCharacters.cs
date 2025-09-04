@@ -1,21 +1,27 @@
 using UnityEngine;
 
-public class PlayerClick : MonoBehaviour
+public class PlayerCharacter : MonoBehaviour
 {
     private DialogueManager dialogueManager;
+    private CameraController cameraController;
 
     void Start()
     {
-        dialogueManager = Object.FindFirstObjectByType<DialogueManager>();
+        dialogueManager = FindFirstObjectByType<DialogueManager>();
+        cameraController = FindFirstObjectByType<CameraController>();
     }
 
     void OnMouseDown()
     {
-        // if UI dialogue is already shown, ignore click
         if (dialogueManager != null && !dialogueManager.IsDialogueActive())
         {
             dialogueManager.StartDialogue();
             Debug.Log("Player clicked, dialogue started.");
+
+            if (cameraController != null)
+            {
+                cameraController.FocusOnPlayer(transform);
+            }
         }
         else
         {

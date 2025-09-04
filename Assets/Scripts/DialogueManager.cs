@@ -214,11 +214,16 @@ public class DialogueManager : MonoBehaviour
             // handle MultiDropdown
             if (line.lineType == LineType.MultiDropdown)
             {
+                // lowercase everything
+                selectedWho = selectedWho.ToLower();
+                selectedWhere = selectedWhere.ToLower();
+                selectedDo = selectedDo.ToLower();
+
                 Debug.Log($"Player chose MultiDropdown: {selectedWho}, {selectedWhere}, {selectedDo}");
-                // save choices for later use
-                whoList.Add(selectedWho);
-                whereList.Add(selectedWhere);
-                doList.Add(selectedDo);
+
+                if (!whoList.Contains(selectedWho)) whoList.Add(selectedWho);
+                if (!whereList.Contains(selectedWhere)) whereList.Add(selectedWhere);
+                if (!doList.Contains(selectedDo)) doList.Add(selectedDo);
             }
             else
             {
@@ -230,24 +235,29 @@ public class DialogueManager : MonoBehaviour
                 else if (line.questionType == QuestionType.Complement) answer = complementInputField.text.Trim();
                 else if (line.questionType == QuestionType.Criticism) answer = criticismInputField.text.Trim();
 
-                // if empty dont go next
+                // if empty, do not proceed
                 if (string.IsNullOrEmpty(answer))
                 {
                     Debug.Log("cant put empty input!");
                     return;
                 }
 
-                if (line.questionType == QuestionType.Who) whoList.Add(answer);
-                else if (line.questionType == QuestionType.Where) whereList.Add(answer);
-                else if (line.questionType == QuestionType.Do) doList.Add(answer);
-                else if (line.questionType == QuestionType.Complement) complementList.Add(answer);
-                else if (line.questionType == QuestionType.Criticism) criticismList.Add(answer);
+                // all input to lowercase
+                answer = answer.ToLower();
+
+                // if exist, dont add to list
+                if (line.questionType == QuestionType.Who && !whoList.Contains(answer)) whoList.Add(answer);
+                else if (line.questionType == QuestionType.Where && !whereList.Contains(answer)) whereList.Add(answer);
+                else if (line.questionType == QuestionType.Do && !doList.Contains(answer)) doList.Add(answer);
+                else if (line.questionType == QuestionType.Complement && !complementList.Contains(answer)) complementList.Add(answer);
+                else if (line.questionType == QuestionType.Criticism && !criticismList.Contains(answer)) criticismList.Add(answer);
             }
         }
 
         currentLine++;
         ShowLine();
     }
+
 
     private void HideAllInputs()
     {
@@ -324,11 +334,18 @@ public class DialogueManager : MonoBehaviour
         complementDropdown.gameObject.SetActive(false);
         criticismDropdown.gameObject.SetActive(false);
 
-        // spawn new player with MultiDropdown choices
+        // turn on camera WASD
+        CameraController cameraController = FindFirstObjectByType<CameraController>();
+        if (cameraController != null)
+        {
+            cameraController.EnableWASD();
+        }
+
         SpawnNewPlayer();
 
         Debug.Log("Dialogue finished.");
     }
+
 
     public bool IsDialogueActive()
     {
