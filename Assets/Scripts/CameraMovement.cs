@@ -2,32 +2,55 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    public float characterSpeed = 5;
+    public float cameraSpeed = 5;
+
+    // boarder
+    public float minX = -15f;
+    public float maxX = 15f;
+    public float minY = -20f;
+    public float maxY = 20f;
+
+    private DialogueManager dialogueManager;
+
+    private void Start()
+    {
+        // reference DialogueManager
+        dialogueManager = FindFirstObjectByType<DialogueManager>();
+    }
 
     private void Update()
     {
-        //detect input
-        Vector2 movementInput = new Vector2(0, 0);
+        // if UI shown, ignore camera movement
+        if (dialogueManager != null && dialogueManager.IsDialogueActive())
+        {
+            return;
+        }
+
+        Vector3 move = Vector3.zero;
+
+        // WASD
         if (Input.GetKey(KeyCode.W))
         {
-            this.transform.position += new Vector3(0, characterSpeed * Time.deltaTime, 0);
-            movementInput.y = 1;
+            move += new Vector3(0, cameraSpeed * Time.deltaTime, 0);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            this.transform.position += new Vector3(0, -characterSpeed * Time.deltaTime, 0);
-            movementInput.y = -1;
+            move += new Vector3(0, -cameraSpeed * Time.deltaTime, 0);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            this.transform.position += new Vector3(-characterSpeed * Time.deltaTime, 0, 0);
-            movementInput.x = -1;
+            move += new Vector3(-cameraSpeed * Time.deltaTime, 0, 0);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            this.transform.position += new Vector3(characterSpeed * Time.deltaTime, 0, 0);
-            movementInput.x = 1;
+            move += new Vector3(cameraSpeed * Time.deltaTime, 0, 0);
         }
+
+        transform.position += move;
+
+        float clampedX = Mathf.Clamp(transform.position.x, minX, maxX);
+        float clampedY = Mathf.Clamp(transform.position.y, minY, maxY);
+
+        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
     }
 }
-
