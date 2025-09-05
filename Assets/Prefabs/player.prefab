@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8022446439076170088}
   - component: {fileID: 8715426344585926108}
   - component: {fileID: -7546883684758691705}
+  - component: {fileID: 4846257357553288390}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -163,3 +164,27 @@ MonoBehaviour:
   who: 
   where: 
   doAction: 
+  chosenComplements: []
+  chosenCriticisms: []
+  playerRenderer: {fileID: 2871378932900041755}
+  smileSprite: {fileID: -7767664637637871694, guid: 92b67c45038c17b41b5972d46195b5d0, type: 3}
+  angrySprite: {fileID: -6351147405044801009, guid: 4c3b9783770f08f4cb219f721c55fdf8, type: 3}
+  defaultSprite: {fileID: 1129955301159090255, guid: 27ea09b7e74463b49a87182ed35be5b2, type: 3}
+--- !u!114 &4846257357553288390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5452346933202594527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91be1e35246079d4497f10ad80521692, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 2
+  changeDirTime: 2
+  minX: -15
+  maxX: 15
+  minY: -20
+  maxY: 20

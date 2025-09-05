@@ -14,7 +14,7 @@ public class DialogueManager : MonoBehaviour
         public QuestionType questionType; // Who, Where, Do, Complement, Criticism
 
         public string replaceWith;
-        public bool shouldReplace; //replace sentence along with prefab
+        public bool shouldReplace; // replace sentence along with prefab
     }
 
     public enum LineType { Normal, Question, Choice, Dropdown, MultiDropdown, Replace }
@@ -44,8 +44,12 @@ public class DialogueManager : MonoBehaviour
     public TMP_Dropdown whereDropdown;
     public TMP_Dropdown doDropdown;
 
+    [Header("Choice Panel + Button Prefab")]
+    public Transform choicePanel;
+    public GameObject playersChoicePrefab;
+
     [Header("Player Prefab")]
-    public GameObject playerPrefab; // prefab to spawn new player
+    public GameObject playerPrefab;
     public float spawnMinX = -15f;
     public float spawnMaxX = 15f;
     public float spawnMinY = -20f;
@@ -53,8 +57,7 @@ public class DialogueManager : MonoBehaviour
 
     public List<DialogueLine> dialogueLines;
     private int currentLine = 0;
-
-    private bool isDialogueActive = true; //if dialogue is going
+    private bool isDialogueActive = true; // if dialogue is going
 
     [Header("Player Answers")]
     public List<string> whoList = new List<string>();
@@ -68,6 +71,8 @@ public class DialogueManager : MonoBehaviour
     private string selectedWhere = "";
     private string selectedDo = "";
 
+    private PlayerData currentPlayerData;
+
     void Start()
     {
         HideAllInputs();
@@ -80,8 +85,20 @@ public class DialogueManager : MonoBehaviour
         doDropdown.gameObject.SetActive(false);
 
         // clicked button to show dropdown
-        complementButton.onClick.AddListener(() => ShowDropdown(QuestionType.Complement));
-        criticismButton.onClick.AddListener(() => ShowDropdown(QuestionType.Criticism));
+        complementButton.onClick.AddListener(() =>
+        {
+            ShowDropdown(QuestionType.Complement);
+            if (currentPlayerData != null) 
+                currentPlayerData.SetFaceSmile();
+        });
+
+        criticismButton.onClick.AddListener(() =>
+        {
+            ShowDropdown(QuestionType.Criticism);
+            if (currentPlayerData != null)
+                currentPlayerData.SetFaceAngry();
+        });
+
     }
 
     public void OpenDialogue()
@@ -153,11 +170,6 @@ public class DialogueManager : MonoBehaviour
             doDropdown.ClearOptions();
             doDropdown.AddOptions(doList);
 
-            // not deleting selectedWho/Where/Do, keep previous?
-            // selectedWho = "";
-            // selectedWhere = "";
-            // selectedDo = "";
-
             whoDropdown.onValueChanged.RemoveAllListeners();
             whereDropdown.onValueChanged.RemoveAllListeners();
             doDropdown.onValueChanged.RemoveAllListeners();
@@ -181,8 +193,7 @@ public class DialogueManager : MonoBehaviour
             if (activeInput != null)
             {
                 activeInput.gameObject.SetActive(true);
-                // safe the precious input
-                // activeInput.text = "";
+                // save previous input
                 activeInput.ActivateInputField();
                 nextButton.interactable = !string.IsNullOrWhiteSpace(activeInput.text);
 
@@ -197,7 +208,7 @@ public class DialogueManager : MonoBehaviour
         {
             complementButton.gameObject.SetActive(true);
             criticismButton.gameObject.SetActive(true);
-            nextButton.interactable = false;
+            nextButton.interactable = false; // wait player to click
         }
         else if (line.lineType == LineType.Dropdown)
         {
@@ -213,11 +224,15 @@ public class DialogueManager : MonoBehaviour
 
         if (line.isQuestion)
         {
+            // handle MultiDropdown
             if (line.lineType == LineType.MultiDropdown)
             {
+                // lowercase everything
                 selectedWho = selectedWho.ToLower();
                 selectedWhere = selectedWhere.ToLower();
                 selectedDo = selectedDo.ToLower();
+
+                Debug.Log($"Player chose MultiDropdown: {selectedWho}, {selectedWhere}, {selectedDo}");
 
                 if (!whoList.Contains(selectedWho)) whoList.Add(selectedWho);
                 if (!whereList.Contains(selectedWhere)) whereList.Add(selectedWhere);
@@ -247,15 +262,20 @@ public class DialogueManager : MonoBehaviour
                 }
                 else if (line.questionType == QuestionType.Complement)
                 {
+                    // complementList
                     answer = complementInputField.text.Trim();
-                    if (!complementList.Contains(answer.ToLower())) complementList.Add(answer.ToLower());
+                    if (!string.IsNullOrEmpty(answer) && !complementList.Contains(answer.ToLower()))
+                        complementList.Add(answer.ToLower());
                 }
                 else if (line.questionType == QuestionType.Criticism)
                 {
+                    // criticismList
                     answer = criticismInputField.text.Trim();
-                    if (!criticismList.Contains(answer.ToLower())) criticismList.Add(answer.ToLower());
+                    if (!string.IsNullOrEmpty(answer) && !criticismList.Contains(answer.ToLower()))
+                        criticismList.Add(answer.ToLower());
                 }
 
+                // if empty, do not proceed
                 if (string.IsNullOrEmpty(answer))
                 {
                     Debug.Log("cant put empty input!");
@@ -281,6 +301,7 @@ public class DialogueManager : MonoBehaviour
         doDropdown.gameObject.SetActive(false);
     }
 
+    // Dropdown type
     private void ShowDropdown(QuestionType type)
     {
         TMP_Dropdown targetDropdown = null;
@@ -313,6 +334,27 @@ public class DialogueManager : MonoBehaviour
             targetDropdown.onValueChanged.AddListener((index) =>
             {
                 string selected = targetList[index];
+
+                // dropdown add to list
+                if (currentPlayerData != null)
+                {
+                    string normalized = selected.ToLower();
+
+                    if (type == QuestionType.Complement)
+                    {
+                        if (!currentPlayerData.chosenComplements.Contains(normalized))
+                            currentPlayerData.chosenComplements.Add(normalized);
+                    }
+                    else if (type == QuestionType.Criticism)
+                    {
+                        if (!currentPlayerData.chosenCriticisms.Contains(normalized))
+                            currentPlayerData.chosenCriticisms.Add(normalized);
+                    }
+                }
+
+                // create a visual button (attached to choicePanel)
+                CreateChoiceButton(selected);
+
                 targetDropdown.gameObject.SetActive(false);
 
                 currentLine++;
@@ -321,6 +363,17 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    // create a PlayersChoice button under choicePanel and set its label
+    private void CreateChoiceButton(string text)
+    {
+        if (playersChoicePrefab == null || choicePanel == null) return;
+
+        GameObject newBtn = Instantiate(playersChoicePrefab, choicePanel);
+        TextMeshProUGUI btnText = newBtn.GetComponentInChildren<TextMeshProUGUI>();
+        if (btnText != null) btnText.text = text;
+    }
+
+    // after finish dialogue, reset dialogue
     private void EndDialogue()
     {
         isDialogueActive = false;
@@ -335,6 +388,7 @@ public class DialogueManager : MonoBehaviour
         complementDropdown.gameObject.SetActive(false);
         criticismDropdown.gameObject.SetActive(false);
 
+        // turn on camera WASD
         CameraController cameraController = FindFirstObjectByType<CameraController>();
         if (cameraController != null)
         {
@@ -342,6 +396,8 @@ public class DialogueManager : MonoBehaviour
         }
 
         SpawnNewPlayer();
+
+        Debug.Log("Dialogue finished.");
     }
 
     public bool IsDialogueActive()
@@ -349,6 +405,7 @@ public class DialogueManager : MonoBehaviour
         return isDialogueActive;
     }
 
+    // check if all MultiDropdown selections are made
     private void CheckAllSelected()
     {
         nextButton.interactable = !string.IsNullOrEmpty(selectedWho) &&
@@ -356,6 +413,7 @@ public class DialogueManager : MonoBehaviour
                                   !string.IsNullOrEmpty(selectedDo);
     }
 
+    // spawn new player at random position in map
     private void SpawnNewPlayer()
     {
         if (playerPrefab == null) return;
@@ -366,31 +424,49 @@ public class DialogueManager : MonoBehaviour
 
         GameObject newPlayer = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
 
-        PlayerData data = newPlayer.GetComponent<PlayerData>();
-        if (data == null)
+        // get PlayerData
+        currentPlayerData = newPlayer.GetComponent<PlayerData>();
+        if (currentPlayerData == null)
         {
-            data = newPlayer.AddComponent<PlayerData>();
+            currentPlayerData = newPlayer.AddComponent<PlayerData>();
         }
 
-        if (string.IsNullOrEmpty(data.who) && string.IsNullOrEmpty(data.where) && string.IsNullOrEmpty(data.doAction))
-        {
-            data.who = selectedWho;
-            data.where = selectedWhere;
-            data.doAction = selectedDo;
+        // initialize SpriteRenderer
+        currentPlayerData.playerRenderer = newPlayer.GetComponent<SpriteRenderer>();
 
-            foreach (var line in dialogueLines)
+        // default no face
+        currentPlayerData.ClearFace();
+
+        // only replace when prefab is empty
+        if (string.IsNullOrEmpty(currentPlayerData.who) && !string.IsNullOrEmpty(selectedWho))
+            currentPlayerData.who = selectedWho;
+
+        if (string.IsNullOrEmpty(currentPlayerData.where) && !string.IsNullOrEmpty(selectedWhere))
+            currentPlayerData.where = selectedWhere;
+
+        if (string.IsNullOrEmpty(currentPlayerData.doAction) && !string.IsNullOrEmpty(selectedDo))
+            currentPlayerData.doAction = selectedDo;
+
+        // replace dialogueLines
+        string finalSentence = currentPlayerData.GetSentence();
+        foreach (var line in dialogueLines)
+        {
+            if (line.shouldReplace)
             {
-                if (line.shouldReplace)
-                {
-                    line.replaceWith = data.GetSentence();
-                }
+                line.replaceWith = finalSentence;
             }
-
-            Debug.Log($"[First spawn] New player spawned and dialogue replaced: {data.GetSentence()}");
         }
-        else
+        // add PlayerMovementAI for random movement
+        PlayerMovementAI ai = newPlayer.GetComponent<PlayerMovementAI>();
+        if (ai == null)
         {
-            Debug.Log($"[Subsequent spawn] New player spawned with existing data: {data.GetSentence()}");
+            ai = newPlayer.AddComponent<PlayerMovementAI>();
         }
+        ai.minX = spawnMinX;
+        ai.maxX = spawnMaxX;
+        ai.minY = spawnMinY;
+        ai.maxY = spawnMaxY;
+
+        Debug.Log($"New player spawned with dialogue: {finalSentence}");
     }
 }
