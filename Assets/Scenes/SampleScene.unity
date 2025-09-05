@@ -2102,31 +2102,37 @@ MonoBehaviour:
     questionType: 1
     replaceWith: 
     shouldReplace: 0
-  - text: Give me a verb
+  - text: What is this person doing?
     isQuestion: 1
     lineType: 1
     questionType: 2
     replaceWith: 
     shouldReplace: 0
-  - text: Enter a thing / object
+  - text: Think of a thing or an object!
     isQuestion: 1
     lineType: 1
     questionType: 3
     replaceWith: 
     shouldReplace: 0
-  - text: Enter a complement.
+  - text: Now you must have some comment on it!
+    isQuestion: 0
+    lineType: 4
+    questionType: 0
+    replaceWith: 
+    shouldReplace: 0
+  - text: Think of a complement.
     isQuestion: 1
     lineType: 1
     questionType: 4
     replaceWith: 
     shouldReplace: 0
-  - text: Enter a criticism.
+  - text: And then a criticism.
     isQuestion: 1
     lineType: 1
     questionType: 5
     replaceWith: 
     shouldReplace: 0
-  - text: Thank you!
+  - text: Thank you! Thats all the questions.
     isQuestion: 0
     lineType: 0
     questionType: 0
@@ -2144,19 +2150,19 @@ MonoBehaviour:
     questionType: 0
     replaceWith: 
     shouldReplace: 1
+  - text: Great choice.
+    isQuestion: 0
+    lineType: 0
+    questionType: 0
+    replaceWith: 
+    shouldReplace: 0
   - text: Now create your own sentences
     isQuestion: 0
     lineType: 0
     questionType: 0
     replaceWith: 
     shouldReplace: 0
-  - text: Tell me about it!
-    isQuestion: 0
-    lineType: 4
-    questionType: 0
-    replaceWith: 
-    shouldReplace: 0
-  - text: Now talk to someone else!
+  - text: And find someone else to talk!
     isQuestion: 0
     lineType: 0
     questionType: 0
@@ -3593,7 +3599,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: Do
+  m_Text: Object
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -5272,7 +5278,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: Where
+  m_Text: Verb
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -5661,7 +5667,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Do\u200B"
+  m_text: "Object\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6425,7 +6431,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Where\u200B"
+  m_text: "Verb\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
