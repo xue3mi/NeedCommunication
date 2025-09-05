@@ -1060,6 +1060,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 186916164}
   m_CullTransparentMesh: 1
+--- !u!1 &197224844
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 197224846}
+  - component: {fileID: 197224845}
+  m_Layer: 0
+  m_Name: arrowManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &197224845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197224844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37122a0d753b0d74abe07460159bc07a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  arrowUI: {fileID: 1162339119}
+--- !u!4 &197224846
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197224844}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 298.1657, y: 295.95053, z: -2.5999293}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &205253827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2090,61 +2136,74 @@ MonoBehaviour:
   spawnMinY: -20
   spawnMaxY: 20
   dialogueLines:
-  - text: Hi! Nice to see you here!
+  - text: Hi! Nice to see you here! Do you know how to start a small talk with people
+      you dont know?
     isQuestion: 0
     lineType: 0
     questionType: 0
     replaceWith: 
     shouldReplace: 0
-  - text: please remind me about a person's name!
+  - text: You first want to ask the person's name!
     isQuestion: 1
     lineType: 1
     questionType: 1
     replaceWith: 
     shouldReplace: 0
-  - text: What is this person doing?
+  - text: And check... what they were doing just now?
     isQuestion: 1
     lineType: 1
     questionType: 2
     replaceWith: 
     shouldReplace: 0
-  - text: Think of a thing or an object!
+  - text: Which object or thing with them that catched your eyes?
     isQuestion: 1
     lineType: 1
     questionType: 3
     replaceWith: 
     shouldReplace: 0
-  - text: Now you must have some comment on it!
+  - text: Good! Now you have observed the people infront of you!
     isQuestion: 0
-    lineType: 4
+    lineType: 0
     questionType: 0
     replaceWith: 
     shouldReplace: 0
-  - text: Think of a complement.
+  - text: Before we start a conversation, you want to pre-think how will you react!
+    isQuestion: 0
+    lineType: 0
+    questionType: 0
+    replaceWith: 
+    shouldReplace: 0
+  - text: 'This is easy, just think of one positive and one negative attitude. '
+    isQuestion: 0
+    lineType: 0
+    questionType: 0
+    replaceWith: 
+    shouldReplace: 0
+  - text: What is a your-ish complement?
     isQuestion: 1
     lineType: 1
     questionType: 4
     replaceWith: 
     shouldReplace: 0
-  - text: And then a criticism.
+  - text: What is a your-ish criticism?
     isQuestion: 1
     lineType: 1
     questionType: 5
     replaceWith: 
     shouldReplace: 0
-  - text: Thank you! Thats all the questions.
+  - text: Thank you! You are now a pro in starting small talks!
     isQuestion: 0
     lineType: 0
     questionType: 0
     replaceWith: 
     shouldReplace: 0
-  - text: 'Now choose how you want to respond to this sentence:'
+  - text: 'Now practice with me, how do you want to respond to this sentence:'
     isQuestion: 0
     lineType: 0
     questionType: 0
     replaceWith: 
     shouldReplace: 0
-  - text: How do you think about me?
+  - text: What do you think about me?
     isQuestion: 0
     lineType: 2
     questionType: 0
@@ -2156,13 +2215,14 @@ MonoBehaviour:
     questionType: 0
     replaceWith: 
     shouldReplace: 0
-  - text: Now create your own sentences
+  - text: Now create your own sentences, so that you could start a new conversation
+      with others.
     isQuestion: 0
     lineType: 0
     questionType: 0
     replaceWith: 
     shouldReplace: 0
-  - text: And find someone else to talk!
+  - text: Be brave! Go find someone else to talk!
     isQuestion: 0
     lineType: 0
     questionType: 0
@@ -2794,6 +2854,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1676619123}
+  - {fileID: 1162339119}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5609,6 +5670,81 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1148057504}
+  m_CullTransparentMesh: 1
+--- !u!1 &1162339118
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1162339119}
+  - component: {fileID: 1162339121}
+  - component: {fileID: 1162339120}
+  m_Layer: 5
+  m_Name: Arrow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1162339119
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162339118}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 572927799}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 490, y: -360}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &1162339120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162339118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 4793074969510804509, guid: c594e3f9b561a8c48be424f02a22b3be, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1162339121
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162339118}
   m_CullTransparentMesh: 1
 --- !u!1 &1189554819
 GameObject:
@@ -11396,6 +11532,10 @@ PrefabInstance:
       propertyPath: playerRenderer
       value: 
       objectReference: {fileID: 1746259263}
+    - target: {fileID: -4034203815621881663, guid: aa5749e91464a774aafafb2cc396e4d5, type: 3}
+      propertyPath: arrowNavigator
+      value: 
+      objectReference: {fileID: 197224845}
     - target: {fileID: 1223864987247190013, guid: aa5749e91464a774aafafb2cc396e4d5, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5
@@ -11455,6 +11595,7 @@ SceneRoots:
   - {fileID: 1707860810}
   - {fileID: 8313744808651401968}
   - {fileID: 402668651}
+  - {fileID: 197224846}
   - {fileID: 572927799}
   - {fileID: 381362431}
   - {fileID: 1913693454}

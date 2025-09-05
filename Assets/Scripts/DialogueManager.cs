@@ -437,6 +437,13 @@ public class DialogueManager : MonoBehaviour
         // default no face
         currentPlayerData.ClearFace();
 
+        //arrow navigator
+        ArrowNavigator arrow = FindFirstObjectByType<ArrowNavigator>();
+        if (arrow != null)
+        {
+            arrow.SetTarget(newPlayer.transform);
+        }
+
         // only replace when prefab is empty
         if (string.IsNullOrEmpty(currentPlayerData.who) && !string.IsNullOrEmpty(selectedWho))
             currentPlayerData.who = selectedWho;
