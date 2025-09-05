@@ -2092,47 +2092,74 @@ MonoBehaviour:
     isQuestion: 0
     lineType: 0
     questionType: 0
+    replaceWith: 
+    shouldReplace: 0
   - text: Enter a name.
     isQuestion: 1
     lineType: 1
     questionType: 1
+    replaceWith: 
+    shouldReplace: 0
   - text: Enter a place.
     isQuestion: 1
     lineType: 1
     questionType: 2
+    replaceWith: 
+    shouldReplace: 0
   - text: Enter a thing / object
     isQuestion: 1
     lineType: 1
     questionType: 3
+    replaceWith: 
+    shouldReplace: 0
   - text: Enter a complement.
     isQuestion: 1
     lineType: 1
     questionType: 4
+    replaceWith: 
+    shouldReplace: 0
   - text: Enter a criticism.
     isQuestion: 1
     lineType: 1
     questionType: 5
+    replaceWith: 
+    shouldReplace: 0
   - text: Thank you.
     isQuestion: 0
     lineType: 0
     questionType: 0
-  - text: 'Now choose how you want to respond to this sentence: How do you think
-      about me?'
+    replaceWith: 
+    shouldReplace: 0
+  - text: 'Now choose how you want to respond to this sentence:'
+    isQuestion: 0
+    lineType: 0
+    questionType: 0
+    replaceWith: 
+    shouldReplace: 0
+  - text: How do you think about me?
     isQuestion: 0
     lineType: 2
     questionType: 0
+    replaceWith: 
+    shouldReplace: 1
   - text: Now see how others react.
     isQuestion: 0
     lineType: 0
     questionType: 0
+    replaceWith: 
+    shouldReplace: 0
   - text: Now create your own sentences
     isQuestion: 0
     lineType: 0
     questionType: 0
+    replaceWith: 
+    shouldReplace: 0
   - text: Tell me about it!
     isQuestion: 0
     lineType: 4
     questionType: 0
+    replaceWith: 
+    shouldReplace: 0
   whoList: []
   whereList: []
   doList: []
@@ -11140,6 +11167,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7546883684758691705, guid: aa5749e91464a774aafafb2cc396e4d5, type: 3}
+      propertyPath: who
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: -7546883684758691705, guid: aa5749e91464a774aafafb2cc396e4d5, type: 3}
+      propertyPath: where
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: -7546883684758691705, guid: aa5749e91464a774aafafb2cc396e4d5, type: 3}
+      propertyPath: doAction
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1223864987247190013, guid: aa5749e91464a774aafafb2cc396e4d5, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5

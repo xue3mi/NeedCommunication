@@ -10,11 +10,14 @@ public class DialogueManager : MonoBehaviour
     {
         public string text;
         public bool isQuestion; // if true, show input field
-        public LineType lineType; // Normal, Question, Choice, Dropdown, MultiDropdown
+        public LineType lineType; // Normal, Question, Choice, Dropdown, MultiDropdown, Replace
         public QuestionType questionType; // Who, Where, Do, Complement, Criticism
+
+        public string replaceWith;
+        public bool shouldReplace; //replace sentence along with prefab
     }
 
-    public enum LineType { Normal, Question, Choice, Dropdown, MultiDropdown }
+    public enum LineType { Normal, Question, Choice, Dropdown, MultiDropdown, Replace }
     public enum QuestionType { None, Who, Where, Do, Complement, Criticism }
 
     public TextMeshProUGUI dialogueText;
@@ -81,13 +84,12 @@ public class DialogueManager : MonoBehaviour
         criticismButton.onClick.AddListener(() => ShowDropdown(QuestionType.Criticism));
     }
 
-    // restart dialogue, but keep previous answers
     public void OpenDialogue()
     {
         if (dialoguePanel != null)
-            dialoguePanel.SetActive(true); //show communication panel
+            dialoguePanel.SetActive(true);
 
-        StartDialogue(); // restart dialogue
+        StartDialogue();
     }
 
     public void StartDialogue()
@@ -113,7 +115,15 @@ public class DialogueManager : MonoBehaviour
         }
 
         DialogueLine line = dialogueLines[currentLine];
-        dialogueText.text = line.text;
+
+        if (!string.IsNullOrEmpty(line.replaceWith))
+        {
+            dialogueText.text = line.replaceWith;
+        }
+        else
+        {
+            dialogueText.text = line.text;
+        }
 
         HideAllInputs();
         complementButton.gameObject.SetActive(false);
@@ -124,20 +134,16 @@ public class DialogueManager : MonoBehaviour
         whereDropdown.gameObject.SetActive(false);
         doDropdown.gameObject.SetActive(false);
 
-        // Normal dialogue: only show text
         if (line.lineType == LineType.Normal)
         {
             nextButton.interactable = true;
         }
-        // MultiDropdown type
         else if (line.lineType == LineType.MultiDropdown)
         {
-            // show all three dropdowns
             whoDropdown.gameObject.SetActive(true);
             whereDropdown.gameObject.SetActive(true);
             doDropdown.gameObject.SetActive(true);
 
-            // fill options
             whoDropdown.ClearOptions();
             whoDropdown.AddOptions(whoList);
 
@@ -147,10 +153,10 @@ public class DialogueManager : MonoBehaviour
             doDropdown.ClearOptions();
             doDropdown.AddOptions(doList);
 
-            // clear previous selections
-            selectedWho = "";
-            selectedWhere = "";
-            selectedDo = "";
+            // not deleting selectedWho/Where/Do, keep previous?
+            // selectedWho = "";
+            // selectedWhere = "";
+            // selectedDo = "";
 
             whoDropdown.onValueChanged.RemoveAllListeners();
             whereDropdown.onValueChanged.RemoveAllListeners();
@@ -160,9 +166,8 @@ public class DialogueManager : MonoBehaviour
             whereDropdown.onValueChanged.AddListener((i) => { selectedWhere = whereList[i]; CheckAllSelected(); });
             doDropdown.onValueChanged.AddListener((i) => { selectedDo = doList[i]; CheckAllSelected(); });
 
-            nextButton.interactable = false; // wait until all selected
+            nextButton.interactable = false;
         }
-        // question type
         else if (line.isQuestion && line.questionType != QuestionType.None)
         {
             TMP_InputField activeInput = null;
@@ -176,11 +181,10 @@ public class DialogueManager : MonoBehaviour
             if (activeInput != null)
             {
                 activeInput.gameObject.SetActive(true);
-                activeInput.text = "";
+                // safe the precious input
+                // activeInput.text = "";
                 activeInput.ActivateInputField();
-
-                // only go next when theres input
-                nextButton.interactable = false;
+                nextButton.interactable = !string.IsNullOrWhiteSpace(activeInput.text);
 
                 activeInput.onValueChanged.RemoveAllListeners();
                 activeInput.onValueChanged.AddListener((value) =>
@@ -189,14 +193,12 @@ public class DialogueManager : MonoBehaviour
                 });
             }
         }
-        // choice type
         else if (line.lineType == LineType.Choice)
         {
             complementButton.gameObject.SetActive(true);
             criticismButton.gameObject.SetActive(true);
-            nextButton.interactable = false; // wait player to click
+            nextButton.interactable = false;
         }
-        // single dropdown type
         else if (line.lineType == LineType.Dropdown)
         {
             ShowDropdown(line.questionType);
@@ -211,15 +213,11 @@ public class DialogueManager : MonoBehaviour
 
         if (line.isQuestion)
         {
-            // handle MultiDropdown
             if (line.lineType == LineType.MultiDropdown)
             {
-                // lowercase everything
                 selectedWho = selectedWho.ToLower();
                 selectedWhere = selectedWhere.ToLower();
                 selectedDo = selectedDo.ToLower();
-
-                Debug.Log($"Player chose MultiDropdown: {selectedWho}, {selectedWhere}, {selectedDo}");
 
                 if (!whoList.Contains(selectedWho)) whoList.Add(selectedWho);
                 if (!whereList.Contains(selectedWhere)) whereList.Add(selectedWhere);
@@ -229,35 +227,46 @@ public class DialogueManager : MonoBehaviour
             {
                 string answer = "";
 
-                if (line.questionType == QuestionType.Who) answer = whoInputField.text.Trim();
-                else if (line.questionType == QuestionType.Where) answer = whereInputField.text.Trim();
-                else if (line.questionType == QuestionType.Do) answer = doInputField.text.Trim();
-                else if (line.questionType == QuestionType.Complement) answer = complementInputField.text.Trim();
-                else if (line.questionType == QuestionType.Criticism) answer = criticismInputField.text.Trim();
+                if (line.questionType == QuestionType.Who)
+                {
+                    answer = whoInputField.text.Trim();
+                    selectedWho = answer.ToLower();
+                    if (!whoList.Contains(selectedWho)) whoList.Add(selectedWho);
+                }
+                else if (line.questionType == QuestionType.Where)
+                {
+                    answer = whereInputField.text.Trim();
+                    selectedWhere = answer.ToLower();
+                    if (!whereList.Contains(selectedWhere)) whereList.Add(selectedWhere);
+                }
+                else if (line.questionType == QuestionType.Do)
+                {
+                    answer = doInputField.text.Trim();
+                    selectedDo = answer.ToLower();
+                    if (!doList.Contains(selectedDo)) doList.Add(selectedDo);
+                }
+                else if (line.questionType == QuestionType.Complement)
+                {
+                    answer = complementInputField.text.Trim();
+                    if (!complementList.Contains(answer.ToLower())) complementList.Add(answer.ToLower());
+                }
+                else if (line.questionType == QuestionType.Criticism)
+                {
+                    answer = criticismInputField.text.Trim();
+                    if (!criticismList.Contains(answer.ToLower())) criticismList.Add(answer.ToLower());
+                }
 
-                // if empty, do not proceed
                 if (string.IsNullOrEmpty(answer))
                 {
                     Debug.Log("cant put empty input!");
                     return;
                 }
-
-                // all input to lowercase
-                answer = answer.ToLower();
-
-                // if exist, dont add to list
-                if (line.questionType == QuestionType.Who && !whoList.Contains(answer)) whoList.Add(answer);
-                else if (line.questionType == QuestionType.Where && !whereList.Contains(answer)) whereList.Add(answer);
-                else if (line.questionType == QuestionType.Do && !doList.Contains(answer)) doList.Add(answer);
-                else if (line.questionType == QuestionType.Complement && !complementList.Contains(answer)) complementList.Add(answer);
-                else if (line.questionType == QuestionType.Criticism && !criticismList.Contains(answer)) criticismList.Add(answer);
             }
         }
 
         currentLine++;
         ShowLine();
     }
-
 
     private void HideAllInputs()
     {
@@ -272,7 +281,6 @@ public class DialogueManager : MonoBehaviour
         doDropdown.gameObject.SetActive(false);
     }
 
-    // Dropdown type
     private void ShowDropdown(QuestionType type)
     {
         TMP_Dropdown targetDropdown = null;
@@ -283,7 +291,6 @@ public class DialogueManager : MonoBehaviour
             targetDropdown = complementDropdown;
             targetList = complementList;
 
-            // hide criticism ui
             criticismDropdown.gameObject.SetActive(false);
             criticismButton.gameObject.SetActive(false);
         }
@@ -292,7 +299,6 @@ public class DialogueManager : MonoBehaviour
             targetDropdown = criticismDropdown;
             targetList = criticismList;
 
-            // hide complement ui
             complementDropdown.gameObject.SetActive(false);
             complementButton.gameObject.SetActive(false);
         }
@@ -307,19 +313,14 @@ public class DialogueManager : MonoBehaviour
             targetDropdown.onValueChanged.AddListener((index) =>
             {
                 string selected = targetList[index];
-                Debug.Log(type + " selected: " + selected);
-
-                // after choose, hide dropdown
                 targetDropdown.gameObject.SetActive(false);
 
-                // next dialogue
                 currentLine++;
                 ShowLine();
             });
         }
     }
 
-    // after finish dialogue, reset dialogue
     private void EndDialogue()
     {
         isDialogueActive = false;
@@ -334,7 +335,6 @@ public class DialogueManager : MonoBehaviour
         complementDropdown.gameObject.SetActive(false);
         criticismDropdown.gameObject.SetActive(false);
 
-        // turn on camera WASD
         CameraController cameraController = FindFirstObjectByType<CameraController>();
         if (cameraController != null)
         {
@@ -342,17 +342,13 @@ public class DialogueManager : MonoBehaviour
         }
 
         SpawnNewPlayer();
-
-        Debug.Log("Dialogue finished.");
     }
-
 
     public bool IsDialogueActive()
     {
         return isDialogueActive;
     }
 
-    // check if all MultiDropdown selections are made
     private void CheckAllSelected()
     {
         nextButton.interactable = !string.IsNullOrEmpty(selectedWho) &&
@@ -360,7 +356,6 @@ public class DialogueManager : MonoBehaviour
                                   !string.IsNullOrEmpty(selectedDo);
     }
 
-    // spawn new player at random position in map
     private void SpawnNewPlayer()
     {
         if (playerPrefab == null) return;
@@ -372,13 +367,30 @@ public class DialogueManager : MonoBehaviour
         GameObject newPlayer = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
 
         PlayerData data = newPlayer.GetComponent<PlayerData>();
-        if (data != null)
+        if (data == null)
+        {
+            data = newPlayer.AddComponent<PlayerData>();
+        }
+
+        if (string.IsNullOrEmpty(data.who) && string.IsNullOrEmpty(data.where) && string.IsNullOrEmpty(data.doAction))
         {
             data.who = selectedWho;
             data.where = selectedWhere;
             data.doAction = selectedDo;
 
-            Debug.Log($"New player spawned: {data.GetSentence()}");
+            foreach (var line in dialogueLines)
+            {
+                if (line.shouldReplace)
+                {
+                    line.replaceWith = data.GetSentence();
+                }
+            }
+
+            Debug.Log($"[First spawn] New player spawned and dialogue replaced: {data.GetSentence()}");
+        }
+        else
+        {
+            Debug.Log($"[Subsequent spawn] New player spawned with existing data: {data.GetSentence()}");
         }
     }
 }
