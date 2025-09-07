@@ -13,7 +13,13 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (dialogueManager != null && !dialogueManager.IsDialogueActive())
+        if (dialogueManager != null && dialogueManager.IsDialogueActive())
+        {
+            Debug.Log("Dialogue active, block PlayerCharacter click.");
+            return;
+        }
+
+        if (dialogueManager != null)
         {
             dialogueManager.StartDialogue();
             Debug.Log("Player clicked, dialogue started.");
@@ -22,10 +28,6 @@ public class PlayerCharacter : MonoBehaviour
             {
                 cameraController.FocusOnPlayer(transform);
             }
-        }
-        else
-        {
-            Debug.Log("Dialogue already active, ignore player click.");
         }
     }
 }

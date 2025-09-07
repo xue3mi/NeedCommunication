@@ -72,9 +72,11 @@ public class DialogueManager : MonoBehaviour
     private string selectedDo = "";
 
     private PlayerData currentPlayerData;
+    private PlayerCharacter playerCharacter;
 
     void Start()
     {
+        playerCharacter = FindFirstObjectByType<PlayerCharacter>();
         HideAllInputs();
         complementButton.gameObject.SetActive(false);
         criticismButton.gameObject.SetActive(false);
@@ -106,12 +108,21 @@ public class DialogueManager : MonoBehaviour
         if (dialoguePanel != null)
             dialoguePanel.SetActive(true);
 
+        // turn off click handler
+        SetAllClickHandlers(false);
+        SetAllPlayerCharacters(false);
+
         StartDialogue();
     }
+
 
     public void StartDialogue()
     {
         isDialogueActive = true;
+        if (playerCharacter != null)
+            playerCharacter.enabled = false;
+        SetAllPlayerColliders(false);
+
         currentLine = 0;
 
         dialoguePanel.SetActive(true);
@@ -302,6 +313,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Dropdown type
+    // Dropdown type
     private void ShowDropdown(QuestionType type)
     {
         TMP_Dropdown targetDropdown = null;
@@ -328,31 +340,34 @@ public class DialogueManager : MonoBehaviour
         {
             targetDropdown.ClearOptions();
             targetDropdown.AddOptions(targetList);
+
+            // no default selection, player must choose one
+            targetDropdown.value = -1;
+            targetDropdown.RefreshShownValue();
+
             targetDropdown.gameObject.SetActive(true);
 
             targetDropdown.onValueChanged.RemoveAllListeners();
             targetDropdown.onValueChanged.AddListener((index) =>
             {
-                string selected = targetList[index];
+                if (index < 0 || index >= targetList.Count) return;
 
-                // dropdown add to list
+                string selected = targetList[index].ToLower();
+
                 if (currentPlayerData != null)
                 {
-                    string normalized = selected.ToLower();
-
                     if (type == QuestionType.Complement)
                     {
-                        if (!currentPlayerData.chosenComplements.Contains(normalized))
-                            currentPlayerData.chosenComplements.Add(normalized);
+                        if (!currentPlayerData.chosenComplements.Contains(selected))
+                            currentPlayerData.chosenComplements.Add(selected);
                     }
                     else if (type == QuestionType.Criticism)
                     {
-                        if (!currentPlayerData.chosenCriticisms.Contains(normalized))
-                            currentPlayerData.chosenCriticisms.Add(normalized);
+                        if (!currentPlayerData.chosenCriticisms.Contains(selected))
+                            currentPlayerData.chosenCriticisms.Add(selected);
                     }
                 }
 
-                // create a visual button (attached to choicePanel)
                 CreateChoiceButton(selected);
 
                 targetDropdown.gameObject.SetActive(false);
@@ -362,6 +377,8 @@ public class DialogueManager : MonoBehaviour
             });
         }
     }
+
+
 
     // create a PlayersChoice button under choicePanel and set its label
     private void CreateChoiceButton(string text)
@@ -377,6 +394,9 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         isDialogueActive = false;
+        if (playerCharacter != null)
+            playerCharacter.enabled = true;
+        SetAllPlayerColliders(true);
 
         dialoguePanel.SetActive(false);
         dialogueText.gameObject.SetActive(false);
@@ -395,10 +415,15 @@ public class DialogueManager : MonoBehaviour
             cameraController.EnableWASD();
         }
 
+        // turn on click handler
+        SetAllClickHandlers(true);
+        SetAllPlayerCharacters(true);
+
         SpawnNewPlayer();
 
         Debug.Log("Dialogue finished.");
     }
+
 
     public bool IsDialogueActive()
     {
@@ -454,15 +479,17 @@ public class DialogueManager : MonoBehaviour
         if (string.IsNullOrEmpty(currentPlayerData.doAction) && !string.IsNullOrEmpty(selectedDo))
             currentPlayerData.doAction = selectedDo;
 
+
         // replace dialogueLines
         string finalSentence = currentPlayerData.GetSentence();
         foreach (var line in dialogueLines)
         {
-            if (line.shouldReplace)
+            if (line.shouldReplace && string.IsNullOrEmpty(line.replaceWith))
             {
                 line.replaceWith = finalSentence;
             }
         }
+
         // add PlayerMovementAI for random movement
         PlayerMovementAI ai = newPlayer.GetComponent<PlayerMovementAI>();
         if (ai == null)
@@ -476,4 +503,40 @@ public class DialogueManager : MonoBehaviour
 
         Debug.Log($"New player spawned with dialogue: {finalSentence}");
     }
+
+    //PlayerClickHandler check with prefab is interacting
+    public void SetCurrentPlayer(PlayerData player)
+    {
+        currentPlayerData = player;
+    }
+
+    private void SetAllClickHandlers(bool state)
+    {
+        PlayerClickHandler[] handlers = FindObjectsByType<PlayerClickHandler>(FindObjectsSortMode.None);
+        foreach (var h in handlers)
+        {
+            h.enabled = state;
+        }
+    }
+    private void SetAllPlayerCharacters(bool state)
+    {
+        PlayerCharacter[] players = FindObjectsByType<PlayerCharacter>(FindObjectsSortMode.None);
+        foreach (var p in players)
+        {
+            p.enabled = state;
+        }
+    }
+
+    private void SetAllPlayerColliders(bool state)
+    {
+        PlayerCharacter[] players = FindObjectsByType<PlayerCharacter>(FindObjectsSortMode.None);
+        foreach (var p in players)
+        {
+            Collider2D col = p.GetComponent<Collider2D>();
+            if (col != null)
+                col.enabled = state;
+        }
+    }
+
+
 }
