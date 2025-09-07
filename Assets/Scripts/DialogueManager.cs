@@ -330,7 +330,6 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Dropdown type
-    // Dropdown type
     private void ShowDropdown(QuestionType type)
     {
         TMP_Dropdown targetDropdown = null;
