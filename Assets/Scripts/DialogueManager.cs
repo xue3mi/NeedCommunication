@@ -12,7 +12,7 @@ public class DialogueManager : MonoBehaviour
         public bool isQuestion; // if true, show input field
         public LineType lineType; // Normal, Question, Choice, Dropdown, MultiDropdown, Replace
         public QuestionType questionType; // Who, Where, Do, Complement, Criticism
-
+        public bool showComments;
         public string replaceWith;
         public bool shouldReplace; // replace sentence along with prefab
     }
@@ -47,6 +47,14 @@ public class DialogueManager : MonoBehaviour
     [Header("Choice Panel + Button Prefab")]
     public Transform choicePanel;
     public GameObject playersChoicePrefab;
+
+    [Header("Comment UI")]
+    public Transform commentPanel;
+    public GameObject complementButtonPrefab;
+    public GameObject criticismButtonPrefab;
+
+    private List<GameObject> activeCommentButtons = new List<GameObject>();
+
 
     [Header("Player Prefab")]
     public GameObject playerPrefab;
@@ -162,6 +170,13 @@ public class DialogueManager : MonoBehaviour
         whereDropdown.gameObject.SetActive(false);
         doDropdown.gameObject.SetActive(false);
 
+        ClearCommentButtons();
+
+        if (line.showComments)
+        {
+            ShowCommentButtons();
+        }
+
         if (line.lineType == LineType.Normal)
         {
             nextButton.interactable = true;
@@ -230,6 +245,8 @@ public class DialogueManager : MonoBehaviour
     public void OnNextButton()
     {
         if (!isDialogueActive) return;
+
+        ClearCommentButtons();
 
         DialogueLine line = dialogueLines[currentLine];
 
@@ -538,5 +555,36 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    private void ShowCommentButtons()
+    {
+        if (currentPlayerData == null) return;
+
+        //complement button
+        foreach (var comp in currentPlayerData.chosenComplements)
+        {
+            GameObject btn = Instantiate(complementButtonPrefab, commentPanel);
+            TextMeshProUGUI txt = btn.GetComponentInChildren<TextMeshProUGUI>();
+            if (txt != null) txt.text = comp;
+            activeCommentButtons.Add(btn);
+        }
+
+        //criticism button
+        foreach (var crit in currentPlayerData.chosenCriticisms)
+        {
+            GameObject btn = Instantiate(criticismButtonPrefab, commentPanel);
+            TextMeshProUGUI txt = btn.GetComponentInChildren<TextMeshProUGUI>();
+            if (txt != null) txt.text = crit;
+            activeCommentButtons.Add(btn);
+        }
+    }
+
+    private void ClearCommentButtons()
+    {
+        foreach (var btn in activeCommentButtons)
+        {
+            if (btn != null) Destroy(btn);
+        }
+        activeCommentButtons.Clear();
+    }
 
 }
