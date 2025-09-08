@@ -524,7 +524,22 @@ public class DialogueManager : MonoBehaviour
     public void SetCurrentPlayer(PlayerData player)
     {
         currentPlayerData = player;
+
+        if (currentPlayerData != null)
+        {
+            //if the prefab has its own data
+            string finalSentence = currentPlayerData.GetSentence();
+            foreach (var line in dialogueLines)
+            {
+                if (line.shouldReplace)
+                {
+                    //every time when click, replace sentence
+                    line.replaceWith = finalSentence;
+                }
+            }
+        }
     }
+
 
     private void SetAllClickHandlers(bool state)
     {
