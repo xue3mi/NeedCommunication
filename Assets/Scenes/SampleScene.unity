@@ -2161,35 +2161,35 @@ MonoBehaviour:
     showComments: 0
     replaceWith: 
     shouldReplace: 0
-  - text: Which object or thing with them that catched your attention?
+  - text: Which object or thing with them caught your attention?
     isQuestion: 1
     lineType: 1
     questionType: 3
     showComments: 0
     replaceWith: 
     shouldReplace: 0
-  - text: Good! Now you have observed the people infront of you!
+  - text: Good! Now you have observed the people in front of you!
     isQuestion: 0
     lineType: 0
     questionType: 0
     showComments: 0
     replaceWith: 
     shouldReplace: 0
-  - text: Before we start a conversation, you want to pre-think how will you react!
+  - text: Before we start a conversation, you want to pre-think how you will react!
     isQuestion: 0
     lineType: 0
     questionType: 0
     showComments: 0
     replaceWith: 
     shouldReplace: 0
-  - text: 'This is easy, just think of one positive and one negative attitude. '
+  - text: This is easy, just think of one positive attitude and one negative attitude.
     isQuestion: 0
     lineType: 0
     questionType: 0
     showComments: 0
     replaceWith: 
     shouldReplace: 0
-  - text: What is a your-ish complement?
+  - text: What is a your-ish compliment?
     isQuestion: 1
     lineType: 1
     questionType: 4
@@ -2203,7 +2203,7 @@ MonoBehaviour:
     showComments: 0
     replaceWith: 
     shouldReplace: 0
-  - text: Thank you! You are now a pro in starting small talks!
+  - text: Thank you! You are now a pro at starting small talk!
     isQuestion: 0
     lineType: 0
     questionType: 0
@@ -2231,7 +2231,7 @@ MonoBehaviour:
     showComments: 0
     replaceWith: 
     shouldReplace: 0
-  - text: I bet you wanna khow how others react to this sentence.
+  - text: I bet you wanna know how others react to this sentence.
     isQuestion: 0
     lineType: 0
     questionType: 0
@@ -2245,7 +2245,7 @@ MonoBehaviour:
     showComments: 0
     replaceWith: 
     shouldReplace: 0
-  - text: Create your own sentences, so that you could start a new conversation with
+  - text: Create your own sentence, so that you can start a new conversation with
       others.
     isQuestion: 0
     lineType: 4
@@ -2253,7 +2253,7 @@ MonoBehaviour:
     showComments: 0
     replaceWith: 
     shouldReplace: 0
-  - text: Now be brave! Go find someone else to talk!
+  - text: Now be brave! Go find someone else to talk to!
     isQuestion: 0
     lineType: 0
     questionType: 0
@@ -5086,7 +5086,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: Complement
+  m_Text: Compliment
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -5625,7 +5625,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Complement
+  m_text: Compliment
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 671e7debcf5dc444f8fe1e4fc7f24485, type: 2}
   m_sharedMaterial: {fileID: 6654642477795357701, guid: 671e7debcf5dc444f8fe1e4fc7f24485, type: 2}
@@ -10162,7 +10162,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Complement\u200B"
+  m_text: "Compliment\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 671e7debcf5dc444f8fe1e4fc7f24485, type: 2}
   m_sharedMaterial: {fileID: 6654642477795357701, guid: 671e7debcf5dc444f8fe1e4fc7f24485, type: 2}
