@@ -2139,7 +2139,14 @@ MonoBehaviour:
   spawnMinY: -20
   spawnMaxY: 20
   dialogueLines:
-  - text: Hi! Nice to see you here! Do you know how to start a small talk with people
+  - text: Hi!
+    isQuestion: 0
+    lineType: 0
+    questionType: 0
+    showComments: 0
+    replaceWith: 
+    shouldReplace: 0
+  - text: Nice to see you here! Do you know how to start a small talk with people
       you dont know?
     isQuestion: 0
     lineType: 0
@@ -4701,7 +4708,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Saying.
+  m_text: Hi!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 671e7debcf5dc444f8fe1e4fc7f24485, type: 2}
   m_sharedMaterial: {fileID: 6654642477795357701, guid: 671e7debcf5dc444f8fe1e4fc7f24485, type: 2}
